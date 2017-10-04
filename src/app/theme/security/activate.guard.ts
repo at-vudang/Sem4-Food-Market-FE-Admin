@@ -10,10 +10,10 @@ export class ActivateGuard implements CanActivate {
   constructor(private router: Router, private tokenService: TokenService) {
   }
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    if (this.tokenService.getToken() === null) {
+    if (this.tokenService.getAccessToken() === null) {
       return false;
     }
-    this.tokenService.isAuthenticated();
+    // this.tokenService.isAuthenticated();
     return true;
   }
 }

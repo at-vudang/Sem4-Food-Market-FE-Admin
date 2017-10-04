@@ -4,6 +4,7 @@ import { DataTablesService } from '../../../tables/components/dataTables/dataTab
 import {environment} from '../../../../../environments/environment';
 import {Http} from '@angular/http';
 import {ActivatedRoute} from '@angular/router';
+import {TokenService} from '../../../../theme/services/token.service';
 
 @Component({
   selector: 'app-order-list',
@@ -12,7 +13,7 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class OrderListComponent implements OnInit {
 
-  public data: any[];
+  public data: any;
   public filterQuery = '';
   public rowsOnPage = 10;
   public activePage = 1;
@@ -24,10 +25,12 @@ export class OrderListComponent implements OnInit {
   p = 1;
 
   constructor(private service: DataTablesService, private http: Http,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private tokenService: TokenService) {
     // this.service.getData().then((data) => {
     //   this.data = data;
     // });
+    this.data = {};
     this.header = route.snapshot.url[0].path;
     switch (this.header) {
       case 'approved':
@@ -48,13 +51,12 @@ export class OrderListComponent implements OnInit {
     }
   }
   public loadData() {
-    this.http.get(environment.hostname + '/order/getOrderByStatus?status=' + this.status + '&page=' + (this.activePage - 1)  +
-      '&size=' + this.rowsOnPage + '&sort=' + this.sortOrder + this.sortBy).
-    map(res => res.json()).subscribe((data) => {
+    this.tokenService.requestWithToken(environment.hostname + '/api/admin/orders?page=' + (this.activePage - 1)  +
+      '&size=' + this.rowsOnPage + '&sort=' + this.sortOrder + this.sortBy, 'GET').subscribe((data) => {
       setTimeout(() => {
         console.log(data);
-        this.data = data.content;
-        this.itemsTotal = data.totalElements;
+        this.data = data;
+        this.itemsTotal = this.data.total;
       }, 1000);
     });
   }

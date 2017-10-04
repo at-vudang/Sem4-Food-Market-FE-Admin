@@ -176,7 +176,7 @@ export class InputProductComponent implements OnInit {
         },
         'imageItems': this.imageItems
       };
-      this.tokenService.postDataWithToken(environment.hostname + '/item/create', data)
+      this.tokenService.requestWithToken(environment.hostname + '/item/create', 'POST', data)
         .subscribe(data2 => {
           alert('Create Success!');
         }, err => {
@@ -201,7 +201,7 @@ export class InputProductComponent implements OnInit {
         },
         'imageItems': this.imageItems
       };
-      this.tokenService.putDataWithToken(environment.hostname + '/item/update', data)
+      this.tokenService.requestWithToken(environment.hostname + '/item/update', 'POST', data)
         .subscribe(data2 => {
           alert('Update Success!');
         }, err => {

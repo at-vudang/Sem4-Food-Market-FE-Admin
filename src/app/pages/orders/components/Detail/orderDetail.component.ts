@@ -44,7 +44,7 @@ export class OrderDetailComponent implements OnInit {
     if (confirmUpdate) {
       let url;
       url = `${environment.hostname}/order/${this.id}/status/${this.status}`;
-      this.tokenService.putDataWithToken(url, null).subscribe(data => {
+      this.tokenService.requestWithToken(url, 'PUT').subscribe(data => {
         alert('Update status success!');
       }, err => {
         alert('Update status fail!');

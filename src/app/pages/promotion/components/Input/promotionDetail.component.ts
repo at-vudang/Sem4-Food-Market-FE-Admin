@@ -62,7 +62,7 @@ export class PromotionDetailComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.id = +params['id'];
       if (this.id) {
-        this.tokenService.getDataWithToken(environment.hostname + '/promotion/' + this.id)
+        this.tokenService.requestWithToken(environment.hostname + '/promotion/' + this.id, 'GET')
           .subscribe(data => {
             setTimeout( () =>  {
               this.inputItemForm = this.formBuilder.group({
@@ -111,7 +111,7 @@ export class PromotionDetailComponent implements OnInit {
       if (confirmDelete) {
         let url;
         url = `${environment.hostname}/item/delete/${this.data[index].id}`;
-        this.tokenService.deleteDataWithToken(url).subscribe(data => {
+        this.tokenService.requestWithToken(url, 'DELETE').subscribe(data => {
           this.data.splice(index, 1);
           alert('Delete Success!');
         }, err => {
@@ -133,7 +133,7 @@ export class PromotionDetailComponent implements OnInit {
         'fromAt': model.fromAt,
         'promotionItems': this.data
       };
-      this.tokenService.postDataWithToken(environment.hostname + '/promotion', data)
+      this.tokenService.requestWithToken(environment.hostname + '/promotion', 'POST', data)
         .subscribe(data2 => {
           swal('Information', 'Add Promotion Success', 'success');
           alert('Add Promotion Success');
@@ -147,7 +147,7 @@ export class PromotionDetailComponent implements OnInit {
         'fromAt': model.fromAt,
         'promotionItems': this.data
       };
-      this.tokenService.putDataWithToken(environment.hostname + '/promotion', data)
+      this.tokenService.requestWithToken(environment.hostname + '/promotion', 'PUT', data)
         .subscribe(data2 => {
           alert('Update Promotion Success');
           console.log(data2);

@@ -2,7 +2,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { Pages } from './pages.component';
 import { ModuleWithProviders } from '@angular/core';
 import { ActivateGuard } from '../theme/security/activate.guard';
-import {SupplierGuard} from '../theme/security/supplier.guard';
 import {NoLoggedGuard} from '../theme/security/no-logged.guard';
 // noinspection TypeScriptValidateTypes
 
@@ -12,7 +11,7 @@ export const routes: Routes = [
   {
     path: 'login',
     loadChildren: 'app/pages/login/login.module#LoginModule',
-    canActivate: [NoLoggedGuard]
+    // canActivate: [NoLoggedGuard]
   },
   {
     path: 'register',
@@ -37,7 +36,7 @@ export const routes: Routes = [
       { path: 'tables', loadChildren: './tables/tables.module#TablesModule' },
       { path: 'maps', loadChildren: './maps/maps.module#MapsModule' }
     ],
-    canActivate: [ActivateGuard]
+    // canActivate: [ActivateGuard]
   }
 ];
 

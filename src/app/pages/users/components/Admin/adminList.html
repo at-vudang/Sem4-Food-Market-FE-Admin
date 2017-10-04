@@ -17,7 +17,7 @@
           <div class="row">
             <div class="offset-sm-1 col-sm-5">
               <div class="row">
-                <select class="form-control input-sm" [(ngModel)]="sortBy">
+                <select class="form-control input-sm" [(ngModel)]="sortBy" (change)="sort(sortBy)">
                   <option ngValue="fullName">Name</option>
                   <option ngValue="email">Email</option>
                   <option ngValue="birthday">Birthday</option>
@@ -27,7 +27,7 @@
             </div>
             <div class="offset-sm-1 col-sm-5">
               <div class="row">
-                <select class="form-control input-sm" [(ngModel)]="sortOrder">
+                <select class="form-control input-sm" [(ngModel)]="sortOrder" (change)="sort(sortBy)">
                   <option ngValue="+">Ascending</option>
                   <option ngValue="-">Descending</option>
                   <option ngValue="badValue">Bad value</option>
@@ -62,12 +62,12 @@
               <a (click)="sort('birthday')">Birthday</a>
             </th>
             <th style="width: 20%">
-              <a (click)="sort('gender')">Gender</a>
+              <a (click)="sort('roles')">Role</a>
             </th>
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let item of data | paginate:{
+          <tr *ngFor="let item of data.data | paginate:{
                                                       itemsPerPage: rowsOnPage,
                                                       currentPage: activePage,
                                                       totalItems: itemsTotal }">
@@ -75,10 +75,13 @@
               <button title="Delete User" (click)="remove(item)" class="btn btn-danger"><i class="ion-android-delete"></i></button>
               <button title="Detail User" [routerLink]="['detail',1]" class="btn btn-info"><i class="ion-information-circled"></i></button>
             </td>
-            <td>{{item.fullName}}</td>
+            <td>{{item.full_name}}</td>
             <td>{{item.email}}</td>
-            <td class="text-left">{{item.birthday!= null ? item.birthday.split('T')[0] : ''}}</td>
-            <td>{{item.gender == true ? 'Male' : item.gender == false ? 'Female' : ''  | uppercase }}</td>
+            <td class="text-left">{{item.birthday}}</td>
+            <td>
+              <button *ngFor="let role of item.roles; let index = index" type="button" class="btn btn-warning btn-xs ml-1 mt-1">{{role.name}}</button>
+            </td>
+
           </tr>
           </tbody>
           <tfoot>

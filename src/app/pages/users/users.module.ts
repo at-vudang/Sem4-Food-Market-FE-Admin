@@ -8,7 +8,6 @@ import { UsersComponent } from './users.component';
 import { CustomerListComponent } from './components/Customer/customerList.component';
 import { DataTablesService } from '../tables/components/dataTables/dataTables.service';
 import { DataTableModule } from 'angular2-datatable';
-import { SupplierListComponent } from './components/Supplier/supplierList.component';
 import { AdminListComponent } from './components/Admin/adminList.component';
 import {PagerModule} from 'ng2-smart-table/components/pager/pager.module';
 import {TablesModule} from '../tables/tables.module';
@@ -44,7 +43,6 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
   declarations: [
     UsersComponent,
     CustomerListComponent,
-    SupplierListComponent,
     AdminListComponent,
     AdminDetailComponent,
     ],

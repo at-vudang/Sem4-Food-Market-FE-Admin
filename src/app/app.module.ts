@@ -16,9 +16,9 @@ import { AppState, InternalStateType } from './app.service';
 import { GlobalState } from './global.state';
 import { NgaModule } from './theme/nga.module';
 import { PagesModule } from './pages/pages.module';
-import {ActivateGuard} from "./theme/security/activate.guard";
-import {NoLoggedGuard} from "./theme/security/no-logged.guard";
-import {SupplierGuard} from "./theme/security/supplier.guard";
+import {ActivateGuard} from './theme/security/activate.guard';
+import {NoLoggedGuard} from './theme/security/no-logged.guard';
+
 
 
 // Application wide providers
@@ -53,7 +53,7 @@ export type StoreType = {
     routing,
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
-    APP_PROVIDERS, ActivateGuard, NoLoggedGuard, SupplierGuard
+    APP_PROVIDERS, ActivateGuard, NoLoggedGuard
   ],
 })
 

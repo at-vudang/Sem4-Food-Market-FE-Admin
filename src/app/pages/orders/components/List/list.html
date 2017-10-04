@@ -74,7 +74,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let item of data | paginate:{
+          <tr *ngFor="let item of data.data | paginate:{
                                                       itemsPerPage: rowsOnPage,
                                                       currentPage: activePage,
                                                       totalItems: itemsTotal }">
@@ -86,8 +86,7 @@
             <td>{{item.name}}</td>
             <td>{{item.address}}</td>
             <td>{{item.phone}}</td>
-            <td>{{item.total}}</td>
-            <td>{{item.createdAt.split('T')[0]}}</td>
+            <td>{{item.created_at.split('T')[0]}}</td>
           </tr>
           </tbody>
           <tfoot>

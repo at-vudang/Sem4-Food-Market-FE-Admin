@@ -27,26 +27,10 @@ export const PAGES_MENU = [
         },
         children: [
           {
-            path: 'customer',
+            path: 'list',
             data: {
               menu: {
-                title: 'general.menu.customer',
-              }
-            }
-          },
-          {
-            path: 'supplier',
-            data: {
-              menu: {
-                title: 'general.menu.supplier',
-              }
-            }
-          },
-          {
-            path: 'admin',
-            data: {
-              menu: {
-                title: 'general.menu.admin',
+                title: 'general.menu.list_user',
               }
             }
           }

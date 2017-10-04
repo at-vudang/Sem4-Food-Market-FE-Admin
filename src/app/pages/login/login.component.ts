@@ -41,7 +41,7 @@ export class LoginComponent {
         'username': values.email,
         'password': values.password,
       };
-      this.tokenService.postDataWithToken(url, data).subscribe((a: any) => {
+      this.tokenService.requestWithToken(url, 'POST',  data).subscribe((a: any) => {
         console.log(a);
         this.tokenService.setToken(a);
         this.service.loginToken(a);

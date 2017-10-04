@@ -24,7 +24,7 @@
           <div class="row">
             <div class="offset-sm-1 col-sm-5">
               <div class="row">
-                <select class="form-control input-sm" [(ngModel)]="sortBy">
+                <select class="form-control input-sm" [(ngModel)]="sortBy" (change)="sort(sortBy)">
                   <option ngValue="name">Name</option>
                   <option ngValue="price">Price</option>
                   <option ngValue="quantity">Quantity</option>
@@ -34,7 +34,7 @@
             </div>
             <div class="offset-sm-1 col-sm-5">
               <div class="row">
-                <select class="form-control input-sm" [(ngModel)]="sortOrder">
+                <select class="form-control input-sm" [(ngModel)]="sortOrder" (change)="sort(sortBy)">
                   <option ngValue="+">Ascending</option>
                   <option ngValue="-">Descending</option>
                   <option ngValue="badValue">Bad value</option>
@@ -66,15 +66,15 @@
               <a (click)="sort('price')">Price</a>
             </th>
             <th style="width: 10%">
-              <a (click)="sort('quantity')">Quantity</a>
+              <a (click)="sort('total')">Quantity</a>
             </th>
             <th style="width: 20%">
-              <a (click)="sort('createdAt')">Created Date</a>
+              <a (click)="sort('created_at')">Created Date</a>
             </th>
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let item of data | paginate:{
+          <tr *ngFor="let item of data.data | paginate:{
                                                       itemsPerPage: rowsOnPage,
                                                       currentPage: activePage,
                                                       totalItems: itemsTotal }">
@@ -83,9 +83,9 @@
               <button title="Detail User" [routerLink]="['/pages/products/detail',item.id]" class="btn btn-info"><i class="ion-information-circled"></i></button>
             </td>
             <td>{{item.name}}</td>
-            <td>{{item.price}}</td>
-            <td class="text-left">{{item.quantity}}</td>
-            <td>{{item.createdAt.split('T')[0] | uppercase}}</td>
+            <td>{{item.price.toLocaleString('vi') }} vnđ</td>
+            <td class="text-left">{{item.total}}</td>
+            <td>{{item.created_at.split('T')[0] | uppercase}}</td>
           </tr>
           </tbody>
           <tfoot>

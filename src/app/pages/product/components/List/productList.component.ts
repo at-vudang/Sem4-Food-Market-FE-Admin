@@ -11,11 +11,11 @@ import {TokenService} from '../../../../theme/services/token.service';
 })
 export class ProductListComponent implements OnInit {
 
-  public data: any[];
+  public data: any;
   public filterQuery = '';
   public rowsOnPage = 10;
   public activePage = 1;
-  public sortBy = 'createdAt';
+  public sortBy = 'created_at';
   public sortOrder = '+';
   public itemsTotal = 0;
   public category = null;
@@ -26,18 +26,18 @@ export class ProductListComponent implements OnInit {
     categoryService.getListCategory(2).subscribe(data => {
       this.categories = data;
     });
+    this.data = {};
   }
   public loadData() {
     let url;
-    url = environment.hostname + '/item/all?page=' + (this.activePage - 1)  +
+    url = environment.hostname + '/api/items?page=' + (this.activePage)  +
     '&size=' + this.rowsOnPage + '&sort=' + this.sortOrder + this.sortBy + ((this.category === null) ? '' : ('&category=' + this.category));
     console.log(url);
-    this.http.get(url).
-      map(res => res.json()).subscribe((data) => {
+    this.tokenService.requestWithToken(url, 'GET').subscribe((data) => {
         setTimeout(() => {
-          console.log(data);
-          this.data = data.content;
-          this.itemsTotal = data.totalElements;
+          this.data = data;
+          console.log(this.data);
+          this.itemsTotal = this.data.total;
         }, 1000);
       });
   }
@@ -65,7 +65,7 @@ export class ProductListComponent implements OnInit {
     if (confirmDelete) {
       let url;
       url = `${environment.hostname}/item/delete/${item.id}`;
-      this.tokenService.deleteDataWithToken(url).subscribe(data => {
+      this.tokenService.requestWithToken(url, 'DELETE').subscribe(data => {
         let index;
         index = this.data.indexOf(item);
         if (index > -1) {

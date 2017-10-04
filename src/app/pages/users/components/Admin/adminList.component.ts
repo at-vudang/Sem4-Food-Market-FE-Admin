@@ -12,7 +12,7 @@ import {TokenService} from '../../../../theme/services/token.service';
 })
 export class AdminListComponent implements OnInit {
 
-  public data: any[];
+  public data: any;
   public filterQuery = '';
   public rowsOnPage = 10;
   public activePage = 1;
@@ -25,15 +25,15 @@ export class AdminListComponent implements OnInit {
     // this.service.getData().then((data) => {
     //   this.data = data;
     // });
+    this.data = [];
   }
   public loadData() {
-    this.http.get(environment.hostname + '/user/getUsersByAuthority/2?page=' + (this.activePage - 1)  +
-      '&size=' + this.rowsOnPage + '&sort=' + this.sortOrder + this.sortBy).
-      map(res => res.json()).subscribe((data) => {
+    this.tokenService.requestWithToken(environment.hostname + '/api/admin/users?page=' + (this.activePage)  +
+      '&size=' + this.rowsOnPage + '&sort=' + this.sortOrder + this.sortBy, 'GET').subscribe((data) => {
         setTimeout(() => {
-          console.log(data);
-          this.data = data.content;
-          this.itemsTotal = data.totalElements;
+          this.data = data.data;
+          console.log(this.data);
+          this.itemsTotal = this.data.total;
         }, 1000);
       });
   }
@@ -57,7 +57,7 @@ export class AdminListComponent implements OnInit {
     if (confirmDelete) {
       let url;
       url = `${environment.hostname}/user/${item.id}`;
-      this.tokenService.deleteDataWithToken(url).subscribe(data => {
+      this.tokenService.requestWithToken(url, 'DELETE').subscribe(data => {
         let index;
         index = this.data.indexOf(item);
         if (index > -1) {
@@ -72,7 +72,6 @@ export class AdminListComponent implements OnInit {
   pageChanged(event) {
     this.activePage = event;
     this.loadData();
-    console.log(event);
   }
   public onPageChange(event) {
     this.rowsOnPage = event.rowsOnPage;

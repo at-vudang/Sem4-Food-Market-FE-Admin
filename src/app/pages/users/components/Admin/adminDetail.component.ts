@@ -99,7 +99,7 @@ export class AdminDetailComponent implements OnInit {
       if (this.id) {
         let url;
         url = environment.hostname + '/user/getUserById/' + this.id;
-        this.tokenService.getDataWithToken(url).subscribe(data => {
+        this.tokenService.requestWithToken(url, 'GET').subscribe(data => {
           setTimeout( () =>  {
             this.userForm = this.formBuilder.group({
               email: new FormControl(data.email, [Validators.required, Validators.email]),
@@ -142,7 +142,7 @@ export class AdminDetailComponent implements OnInit {
         'creditCard': model.card,
         'authorities': this.checkboxModel
       };
-      this.tokenService.postDataWithToken(url, data).subscribe(res => {
+      this.tokenService.requestWithToken(url, 'POST', data).subscribe(res => {
         alert('Create successful');
       });
     } else {
@@ -162,7 +162,7 @@ export class AdminDetailComponent implements OnInit {
       };
       console.log(data);
       url = environment.hostname + '/user/updateByAdmin';
-      this.tokenService.putDataWithToken(url, data).subscribe(res => {
+      this.tokenService.requestWithToken(url, 'PUT', data).subscribe(res => {
         alert('Update successful');
       });
     }
