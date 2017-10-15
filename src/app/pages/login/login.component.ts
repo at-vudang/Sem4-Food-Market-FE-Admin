@@ -35,15 +35,15 @@ export class LoginComponent {
   public onSubmit(values): void {
     this.submitted = true;
     if (this.form.valid) {
-      const url = environment.hostname + '/auth/admin';
+      const url = environment.hostname + '/api/users/login';
       let data;
       data = {
-        'username': values.email,
+        'email': values.email,
         'password': values.password,
       };
-      this.tokenService.requestWithToken(url, 'POST',  data).subscribe((a: any) => {
+      this.http.post(url, data).map(res => res.json()).subscribe((a: any) => {
         console.log(a);
-        this.tokenService.setToken(a);
+        this.tokenService.setToken(a.data);
         this.service.loginToken(a);
         swal('Thông báo', 'Đăng nhập thành công!', 'success');
         alert('Login success!');

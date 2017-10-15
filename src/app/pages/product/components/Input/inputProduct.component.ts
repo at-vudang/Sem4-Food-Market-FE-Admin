@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { NgUploaderOptions } from 'ngx-uploader';
 import './ckeditor.loader';
 import 'ckeditor';
-import {DropzoneComponent, DropzoneConfigInterface} from 'ngx-dropzone-wrapper';
+import {DropzoneComponent, DropzoneConfig, DropzoneConfigInterface} from 'ngx-dropzone-wrapper';
 import {CategoryService} from '../../../../theme/services/category.service';
 import {UnitService} from '../../../../theme/services/unit.service';
 import {Http} from '@angular/http';
@@ -24,8 +24,7 @@ export class InputProductComponent implements OnInit {
     height: '300',
   };
   inputItemForm: FormGroup;
-  public configDropZone = {
-  };
+  // public configDropZone = {};
   id: number;
   isRemember = false;
   defaultPicture = 'assets/img/theme/no-photo.png';
@@ -41,7 +40,7 @@ export class InputProductComponent implements OnInit {
     // url: 'http://website.com/upload'
     url: '',
   };
-  categoriesChoise: Array<any>;
+  categoryChoise: any;
   imageItems: any;
   constructor(private categoryService: CategoryService,
               private unitService: UnitService,
@@ -50,7 +49,12 @@ export class InputProductComponent implements OnInit {
               private tokenService: TokenService,
               private route: ActivatedRoute,
               private router: Router,
-              private itemService: ItemService) {
+              private itemService: ItemService,
+              public  configDropZone: DropzoneConfig) {
+    this.configDropZone.headers = {
+      'Accept': 'application/json',
+      'Authorization': this.tokenService.getTokenType() + ' ' + this.tokenService.getAccessToken()
+    };
     this.profile = {
       picture: 'assets/img/app/profile/Nasta.png'
     };
@@ -60,61 +64,51 @@ export class InputProductComponent implements OnInit {
       price: new FormControl('', [Validators.required]),
       quantity: new FormControl('', [Validators.required,
         Validators.minLength(0)]),
-      unit: new FormControl('1', [Validators.required]),
       description: new FormControl('', [Validators.required]),
       expiredAt: new FormControl('', [Validators.required]),
     });
-    categoryService.getListCategory(2).subscribe(data => {
+    categoryService.getCategory().subscribe(data => {
       console.log(data);
       this.categories = data;
     });
-    unitService.getListUnit().subscribe(data => {
-      console.log(data);
-      this.units = data;
-    });
-    this.categoriesChoise = [];
+    this.categoryChoise = 0;
     this.imageItems = [];
-  }
-  removeCategory(index) {
-    this.categoriesChoise.splice(index, 1);
-    console.log(this.categoriesChoise);
   }
   ngOnInit(): void {
     this.route.params.subscribe(params => {
+      this.imageItems = [];
       this.id = +params['id'];
       if (this.id) {
         this.itemService.getItemById(this.id).subscribe(data => {
-          this.categoriesChoise = data.category;
-          this.imageItems = data.imageItems;
+          this.categoryChoise = data.category;
+          // this.imageItems = data.imageItems;
+          console.log(data);
           setTimeout( () =>  {
             this.inputItemForm = this.formBuilder.group({
               name: new FormControl(data.name, [Validators.required]),
-              category: new FormControl(0, [Validators.required]),
+              category: new FormControl(data.category_id, [Validators.required]),
               price: new FormControl(data.price, [Validators.required]),
-              quantity: new FormControl(data.quantity, [Validators.required,
+              quantity: new FormControl(data.total, [Validators.required,
                 Validators.minLength(0)]),
-              unit: new FormControl(data.unit.id, [Validators.required]),
-              description: new FormControl(data.description, [Validators.required]),
-              expiredAt: new FormControl('', [Validators.required]),
+              description: new FormControl(data.descript, [Validators.required]),
+              expiredAt: new FormControl(data.expired_day, [Validators.required]),
             });
-            this.configDropZone = {
-              uiColor: '#F0F3F4',
-              height: '300',
-              autoDiscover: false,
-              init: function () {
+            let i;
+            i = 0;
+            this.configDropZone.init = function () {
+                if (i++ > 1) {
+                  return false;
+                }
                 let thisDropzone;
                 thisDropzone = this;
                 //// Create the mock file:
-                data.imageItems.forEach(item => {
-                  const mockFile = {
-                    name: 'Image detail',
-                  };
-                  console.log('init');
-                  thisDropzone.emit('addedfile', mockFile);
-                  thisDropzone.emit('thumbnail', mockFile, item.image);
-                  thisDropzone.emit('complete', mockFile);
-                });
-              }
+                const mockFile = {
+                  name: 'Image detail',
+                };
+                console.log('init');
+                thisDropzone.emit('addedfile', mockFile);
+                thisDropzone.emit('thumbnail', mockFile, data.image);
+                thisDropzone.emit('complete', mockFile);
             };
           }, 3000);
         });
@@ -126,33 +120,29 @@ export class InputProductComponent implements OnInit {
     //   console.log(value);
     // });
   }
-  addCategory(id) {
-    console.log(this.categoriesChoise.find(item => item.id === Number.parseInt(id)));
-    if (this.categoriesChoise.find(item => item.id === Number.parseInt(id)) === undefined) {
-      let category;
-      category = this.categories.find(item => item.id === Number.parseInt(id));
-      this.categoriesChoise.push(category);
-    }
-  }
   onRemoveFile(event) {
     if (event.status === 'error') {
       return false;
     }
-    this.http.get(environment.hostname + '/upload/remove?filename=' + event.name).subscribe(data => {
-      for (let count = 0; count < this.imageItems.length; count++) {
-        if (this.imageItems[count].image === event.name) {
-          this.imageItems.splice(count, 1);
-        }
+    for (let count = 0; count < this.imageItems.length; count++) {
+      if (this.imageItems[count].image.indexOf(event.name) > -1 ) {
+        this.tokenService.requestWithToken(environment.hostname
+          + '/api/admin/remove-image/items?file_name=' + this.imageItems[count].image, 'DELETE')
+          .subscribe(data => {
+            this.imageItems.splice(count, 1);
+            alert('Delete Success!');
+          }, err => {
+            alert('Delete Fail!');
+          });
       }
-    }, err => {
-      // this.onRemoveFile(event);
-    });
+    }
   }
   onUploadError(event) {
     console.log(event);
   }
   onUploadSuccess(event) {
-    this.imageItems.push({'image' : event[0].name});
+    console.log(event);
+    this.imageItems.push({'image' : event[1]});
   }
 
   save(model) {
@@ -162,48 +152,35 @@ export class InputProductComponent implements OnInit {
       data = {
         'name': model.name,
         'price': model.price,
-        'avatar': '/' + this.imageItems[0].image,
         'status': true,
-        'quantity': model.quantity,
-        'description': model.description,
-        'expiredAt': model.expiredAt,
-        'categories': this.categoriesChoise,
-        'unit': {
-          'id': Number.parseInt(model.unit)
-        },
-        'supplier': {
-          'id': 1
-        },
-        'imageItems': this.imageItems
+        'total': model.quantity,
+        'descript': model.description,
+        'expired_day': model.expiredAt,
+        'category_id': model.category,
+        'image': this.imageItems[0].image
       };
-      this.tokenService.requestWithToken(environment.hostname + '/item/create', 'POST', data)
+      this.tokenService.requestWithToken(environment.hostname + '/api/admin/items', 'POST', data)
         .subscribe(data2 => {
           alert('Create Success!');
+          this.router.navigate(['/pages/products/list']);
         }, err => {
           alert('Create Fail!');
         });
     } else {
       data = {
-        'id': this.id,
         'name': model.name,
         'price': model.price,
-        'avatar': '/' + this.imageItems[0].image,
         'status': true,
-        'quantity': model.quantity,
-        'description': model.description,
-        'expiredAt': model.expiredAt,
-        'categories': this.categoriesChoise,
-        'unit': {
-          'id': Number.parseInt(model.unit)
-        },
-        'supplier': {
-          'id': 1
-        },
-        'imageItems': this.imageItems
+        'total': model.quantity,
+        'descript': model.description,
+        'expired_day': model.expiredAt,
+        'category_id': model.category,
+        'image': this.imageItems[0].image
       };
-      this.tokenService.requestWithToken(environment.hostname + '/item/update', 'POST', data)
+      this.tokenService.requestWithToken(environment.hostname + '/api/admin/items/' + this.id, 'PUT', data)
         .subscribe(data2 => {
           alert('Update Success!');
+          this.router.navigate(['/pages/products/list']);
         }, err => {
           alert('Update Fail!');
         });

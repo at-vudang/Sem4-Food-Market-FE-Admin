@@ -7,8 +7,8 @@ import { environment } from '../../../environments/environment';
 export class CategoryService {
   constructor(private http: Http) {
   }
-  getListCategory(level) {
-    return this.http.get(`${environment.hostname}/category/level/` + level).map(res => res.json());
+  getCategory() {
+    return this.http.get(`${environment.hostname}/api/categories`).map(res => res.json());
   }
   getListSubCategory(id: number) {
     return this.http.get(`${environment.hostname}/category/parents/${id}`).map(res => res.json());

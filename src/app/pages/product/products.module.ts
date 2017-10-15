@@ -17,13 +17,15 @@ import {ShareService} from '../../theme/services/share.service';
 import {NgxPaginationModule} from 'ngx-pagination';
 import {ProductListComponent} from './components/List/productList.component';
 import {ItemService} from '../../theme/services/item.service';
+import {environment} from '../../../environments/environment';
 
 const DROPZONE_CONFIG: DropzoneConfigInterface = {
   // Change this to your upload POST address:
-  url: 'http://localhost:8089/upload/upload',
+  url: environment.hostname + '/api/admin/upload-image/items',
   maxFilesize: 50,
   acceptedFiles: 'image/*',
   addRemoveLinks: true,
+  maxFiles: 2
 };
 @NgModule({
   imports: [

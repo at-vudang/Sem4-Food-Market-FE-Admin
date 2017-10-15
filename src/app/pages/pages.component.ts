@@ -5,7 +5,7 @@ import { BaMenuService } from '../theme';
 import { PAGES_MENU } from './pages.menu';
 
 @Component({
-  selector: 'pages',
+  selector: 'app-pages',
   template: `
     <ba-sidebar></ba-sidebar>
     <ba-page-top></ba-page-top>

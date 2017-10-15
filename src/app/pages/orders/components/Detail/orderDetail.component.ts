@@ -22,15 +22,22 @@ export class OrderDetailComponent implements OnInit {
   sort() {
   }
   public loadData() {
-    this.http.get(environment.hostname + '/order/' + this.id).
-    map(res => res.json()).subscribe((data) => {
+    this.tokenService.requestWithToken(environment.hostname + '/api/orders/' + this.id, 'GET')
+    .subscribe((data) => {
       setTimeout(() => {
         console.log(data);
-        this.data = data;
-        this.status = data.status;
-        this.transAt = data.transportedAt !== null ? data.transportedAt.split('T')[0] : '';
+        this.data = data.data;
+        this.status = data.data.status;
       }, 1000);
     });
+  }
+  total_price(data) {
+    let total;
+    total = 0;
+    data.forEach(item => {
+      total += item.price * item.quantity;
+    });
+    return total.toLocaleString('vi');
   }
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -43,7 +50,7 @@ export class OrderDetailComponent implements OnInit {
     confirmUpdate = confirm('Are you sure change status?');
     if (confirmUpdate) {
       let url;
-      url = `${environment.hostname}/order/${this.id}/status/${this.status}`;
+      url = `${environment.hostname}/api/admin/change-status-orders/${this.id}?status=${this.status}`;
       this.tokenService.requestWithToken(url, 'PUT').subscribe(data => {
         alert('Update status success!');
       }, err => {

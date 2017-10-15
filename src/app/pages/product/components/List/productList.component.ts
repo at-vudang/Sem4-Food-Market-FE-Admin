@@ -23,15 +23,21 @@ export class ProductListComponent implements OnInit {
   public categories = null;
   constructor(private categoryService: CategoryService, private http: Http, private tokenService: TokenService) {
     this.categories = [];
-    categoryService.getListCategory(2).subscribe(data => {
+    categoryService.getCategory().subscribe(data => {
       this.categories = data;
+      this.category = 0;
     });
     this.data = {};
   }
   public loadData() {
     let url;
-    url = environment.hostname + '/api/items?page=' + (this.activePage)  +
-    '&size=' + this.rowsOnPage + '&sort=' + this.sortOrder + this.sortBy + ((this.category === null) ? '' : ('&category=' + this.category));
+    if (this.category === null || this.category === 0) {
+      url = environment.hostname + '/api/items?page=' + (this.activePage)  +
+        '&size=' + this.rowsOnPage + '&sort=' + this.sortOrder + this.sortBy;
+    } else {
+      url = environment.hostname + '/api/categories/' + this.category + '/items?page=' + (this.activePage)  +
+        '&size=' + this.rowsOnPage + '&sort=' + this.sortOrder + this.sortBy;
+    }
     console.log(url);
     this.tokenService.requestWithToken(url, 'GET').subscribe((data) => {
         setTimeout(() => {
@@ -57,14 +63,13 @@ export class ProductListComponent implements OnInit {
   public sortByWordLength = (a: any) => {
     return a.city.length;
   }
-
   public remove(item) {
     let confirmDelete;
     confirmDelete = confirm('Are you sure delete it?');
     console.log(confirmDelete);
     if (confirmDelete) {
       let url;
-      url = `${environment.hostname}/item/delete/${item.id}`;
+      url = `${environment.hostname}/api/admin/items/${item.id}`;
       this.tokenService.requestWithToken(url, 'DELETE').subscribe(data => {
         let index;
         index = this.data.indexOf(item);

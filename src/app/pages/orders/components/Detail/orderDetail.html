@@ -4,19 +4,13 @@
       <div class="col-sm-4">
         <div class="form-group">
           <label>Name: </label>
-          <p class="form-text">Order {{data.id}} | Date: {{data.createdAt.split('T')[0]}}</p>
+          <p class="form-text">Order {{data.id}} | Date: {{data.created_at.split('T')[0]}}</p>
         </div>
       </div>
       <div class="col-sm-4">
         <div class="form-group">
           <label>User: </label>
-          <a [routerLink]="['/pages/users/detail',data.userId]" class="form-text">{{data.name}}</a>
-        </div>
-      </div>
-      <div class="col-sm-4">
-        <div class="form-group">
-          <label>Phone: </label>
-          <p class="form-text">{{data.phone}}</p>
+          <a [routerLink]="['/pages/users/detail',data.user_id]" class="form-text">{{data.user.full_name}}</a>
         </div>
       </div>
       <div class="col-sm-4">
@@ -27,14 +21,8 @@
       </div>
       <div class="col-sm-4">
         <div class="form-group">
-          <label for="inputDateTrans">Date transfer: </label>
-          <input type="date" class="form-control" id="inputDateTrans"  placeholder="Date transfer" [(ngModel)]="transAt">
-        </div>
-      </div>
-      <div class="col-sm-4">
-        <div class="form-group">
           <label>Total Payment: </label>
-          <p class="form-text">{{data.total.toLocaleString('vi')}} đ</p>
+          <p class="form-text">{{total_price(data.order_items)}} đ</p>
         </div>
       </div>
       <div class="col-sm-4">
@@ -66,21 +54,21 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let item of data.orderItems" class="no-top-border">
+        <tr *ngFor="let item of data.order_items" class="no-top-border">
           <td>
             <button title="Delete User" (click)="remove(item)" class="btn btn-danger"><i class="ion-android-delete"></i></button>
             <button title="Detail User" (click)="remove(item)" class="btn btn-info"><i class="ion-information-circled"></i></button>
           </td>
           <td>{{item.id}}</td>
-          <td>{{item.itemVO.name}}</td>
-          <td>{{item.priceOffical.toLocaleString('vi')}}đ</td>
-          <td>{{item.quantityCart}}</td>
-          <td>{{(item.priceOffical * item.quantityCart).toLocaleString('vi')}}đ</td>
-          <td>{{item.createAt !== null ? item.createAt.split('T')[0] : ''}}</td>
+          <td>{{item.item.name}}</td>
+          <td>{{item.price.toLocaleString('vi')}}đ</td>
+          <td>{{item.quantity}}</td>
+          <td>{{(item.price * item.quantity).toLocaleString('vi')}}đ</td>
+          <td>{{item.created_at !== null ? item.created_at.split('T')[0] : ''}}</td>
         <tr>
           <th colspan="4"></th>
           <th>Total</th>
-          <th>{{data.total.toLocaleString('vi')}}đ</th>
+          <th>{{total_price(data.order_items)}}đ</th>
         </tr>
         </tbody>
       </table>

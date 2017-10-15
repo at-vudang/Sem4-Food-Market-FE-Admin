@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {NgUploaderOptions} from 'ngx-uploader/src/classes/ng-uploader-options.class';
 import {BasicTablesService} from '../../../tables/components/basicTables/basicTables.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {TokenService} from '../../../../theme/services/token.service';
 import {environment} from '../../../../../environments/environment';
+import {Http} from '@angular/http';
 
 @Component({
   selector: 'app-admin-detail',
@@ -17,19 +18,15 @@ export class AdminDetailComponent implements OnInit {
   public profile: any = {
     picture: 'assets/img/app/profile/Nasta.png'
   };
+  public activePage = 1;
   public checkboxModel = [{
     id: 2,
     name: 'Admin',
     checked: false,
     class: 'col-md-4'
   }, {
-    id: 3,
-    name: 'Supplier',
-    checked: false,
-    class: 'col-md-4'
-  }, {
     id: 1,
-    name: 'Customer',
+    name: 'User',
     checked: false,
     class: 'col-md-4'
   }];
@@ -60,64 +57,56 @@ export class AdminDetailComponent implements OnInit {
   constructor(private _basicTablesService: BasicTablesService,
               private formBuilder: FormBuilder,
               private route: ActivatedRoute,
-              private tokenService: TokenService) {
+              private tokenService: TokenService, private http: Http) {
     this.metricsTableData = _basicTablesService.metricsTableData;
     this.userForm = this.formBuilder.group({
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: ['', [Validators.required, Validators.email], this.isEmailUnique.bind(this)],
       name: new FormControl('', [Validators.required]),
-      birthday: new FormControl('', [Validators.required, Validators.pattern('[0-9]*')]),
-      address: new FormControl('', [Validators.required]),
-      card: new FormControl(''),
-      gender: new FormControl('')
+      birthday: new FormControl('', [Validators.required]),
+      phone: new FormControl('', [Validators.required]),
     });
     this.orders = [];
     this.id = 0;
   }
-  onRemoveFile(event) {
-    if (event.status === 'error') {
-      return false;
-    }
-    // this.http.get(environment.hostname + '/upload/remove?filename=' + event.name).subscribe(data => {
-    //   for (let count = 0; count < this.imageItems.length; count++) {
-    //     if (this.imageItems[count].image === event.name) {
-    //       this.imageItems.splice(count, 1);
-    //     }
-    //   }
-    // }, err => {
-    //   // this.onRemoveFile(event);
-    // });
-  }
-  onUploadError(event) {
-    console.log(event);
-  }
-  onUploadSuccess(event) {
-    // this.imageItems.push({'image' : event[0].name});
+  isEmailUnique(control: AbstractControl) {
+    const q = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        this.http.get(environment.hostname + '/api/check-exist-email/' + control.value).
+        map(res => res.json()).subscribe(data => {
+          if (!data.success) {
+            resolve({ 'isEmailUnique': true });
+          } else {
+            resolve(null);
+          }
+        }, () => { resolve({ 'isEmailUnique': true }); });
+      }, 10);
+    });
+    return q;
   }
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.id = +params['id'];
       if (this.id) {
         let url;
-        url = environment.hostname + '/user/getUserById/' + this.id;
-        this.tokenService.requestWithToken(url, 'GET').subscribe(data => {
+        url = environment.hostname + '/api/admin/users/' + this.id;
+        this.tokenService.requestWithToken(url, 'GET').subscribe(res => {
+          let data;
+          data = res.data;
           setTimeout( () =>  {
             this.userForm = this.formBuilder.group({
               email: new FormControl(data.email, [Validators.required, Validators.email]),
-              name: new FormControl(data.fullName, [Validators.required]),
+              name: new FormControl(data.full_name, [Validators.required]),
               birthday: new FormControl((data.birthday != null) ? data.birthday.split('T')[0] : '',
-                [Validators.required, Validators.pattern('[0-9]*')]),
-              address: new FormControl(data.address, [Validators.required]),
-              card: new FormControl(data.creditCard),
-              gender: new FormControl(data.gender != null ? data.gender.toString() : 'true')
+                [Validators.required]),
+              phone: new FormControl(data.phone, [Validators.required]),
             });
-            this.profile.picture = data.avatar;
           }, 2000);
-          console.log(data);
-          this.orders = data.orders;
-          data.authorities.forEach(item => {
+          // this.orders = data.orders;
+          data.roles.forEach(item => {
             this.checkboxModel.find(check => check.id === item.id).checked = true;
           });
         });
+        this.loadDataOrder();
       //   url = environment.hostname + '/O'
       // this.tokenService.getDataWithToken()
       } else {
@@ -129,42 +118,57 @@ export class AdminDetailComponent implements OnInit {
   save(model) {
     if (!this.id) {
       let url, data;
-      url = environment.hostname + '/user/createUser';
+      url = environment.hostname + '/api/admin/users';
       data = {
-        'username': model.email,
         'email': model.email,
-        'password': '12356',
-        'fullName': model.name,
-        'address': model.address,
-        'gender': model.gender,
+        'full_name': model.name,
+        'password': '123456',
+        'password_confirmation': '123456',
+        'phone': model.phone,
         'birthday': model.birthday,
-        'avatar': 'add',
-        'creditCard': model.card,
-        'authorities': this.checkboxModel
+        'is_admin': this.checkboxModel.find(check => check.id === 2).checked ? 1 : 0
       };
       this.tokenService.requestWithToken(url, 'POST', data).subscribe(res => {
         alert('Create successful');
+      }, err => {
+        alert('Create fail');
       });
     } else {
       let url, data;
       data = {
-        'id': this.id,
-        'username': model.email,
         'email': model.email,
-        'password': '12356',
-        'fullName': model.name,
-        'address': model.address,
-        'gender': model.gender,
+        'full_name': model.name,
+        'phone': model.phone,
         'birthday': model.birthday,
-        'avatar': 'add',
-        'creditCard': model.card,
-        'authorities': this.checkboxModel.filter(item => item.checked === true)
+        'is_admin': this.checkboxModel.find(check => check.id === 2).checked ? 1 : 0
       };
       console.log(data);
-      url = environment.hostname + '/user/updateByAdmin';
+      url = environment.hostname + '/api/admin/users/' + this.id;
       this.tokenService.requestWithToken(url, 'PUT', data).subscribe(res => {
         alert('Update successful');
+      }, err => {
+        alert('Update fail');
       });
     }
+  }
+  public loadDataOrder() {
+    let url;
+    url = environment.hostname + '/api/admin/getOrderFollowUser/' + this.id;
+    this.tokenService.requestWithToken(url, 'GET').subscribe(res => {
+      this.orders = res;
+    });
+  }
+
+  pageChanged(event) {
+    this.activePage = event;
+    this.loadDataOrder();
+  }
+  total_price(data) {
+    let total;
+    total = 0;
+    data.items.forEach(item => {
+      total += item.price_real;
+    });
+    return total.toLocaleString('vi');
   }
 }

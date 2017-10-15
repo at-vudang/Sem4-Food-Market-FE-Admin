@@ -102,6 +102,10 @@ export class TokenService {
       return this.http.put(url, data, {
         headers: headers
       }).map(res => res.json());
+    } else if (method.toUpperCase() === 'DELETE') {
+      return this.http.delete(url, {
+        headers: headers
+      }).map(res => res.json());
     } else {
       return this.http.get(url, {
         headers: headers

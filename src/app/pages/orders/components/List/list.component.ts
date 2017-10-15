@@ -19,7 +19,7 @@ export class OrderListComponent implements OnInit {
   public activePage = 1;
   public header: string;
   public status: number;
-  public sortBy = 'createdAt';
+  public sortBy = 'created_at';
   public sortOrder = '-';
   public itemsTotal = 0;
   p = 1;
@@ -50,8 +50,16 @@ export class OrderListComponent implements OnInit {
         break;
     }
   }
+  total_price(data) {
+    let total;
+    total = 0;
+    data.items.forEach(item => {
+      total += item.price_real;
+    });
+    return total.toLocaleString('vi');
+  }
   public loadData() {
-    this.tokenService.requestWithToken(environment.hostname + '/api/admin/orders?page=' + (this.activePage - 1)  +
+    this.tokenService.requestWithToken(environment.hostname + '/api/admin/orders?page=' + (this.activePage)  +
       '&size=' + this.rowsOnPage + '&sort=' + this.sortOrder + this.sortBy, 'GET').subscribe((data) => {
       setTimeout(() => {
         console.log(data);
@@ -71,14 +79,6 @@ export class OrderListComponent implements OnInit {
 
   public sortByWordLength = (a: any) => {
     return a.city.length;
-  }
-
-  public remove(item) {
-    let index;
-    index = this.data.indexOf(item);
-    if (index > -1) {
-      this.data.splice(index, 1);
-    }
   }
   pageChanged(event) {
     this.activePage = event;

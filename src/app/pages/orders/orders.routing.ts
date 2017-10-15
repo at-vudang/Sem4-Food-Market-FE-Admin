@@ -11,10 +11,6 @@ const routes: Routes = [
     component: OrderComponent,
     children: [
       { path: 'list', component: OrderListComponent },
-      { path: 'approved', component: OrderListComponent },
-      { path: 'pending', component: OrderListComponent },
-      { path: 'canceled', component: OrderListComponent },
-      { path: 'finished', component: OrderListComponent },
       { path: 'detail/:id', component: OrderDetailComponent },
     ],
   },

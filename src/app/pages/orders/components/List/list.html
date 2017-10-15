@@ -19,10 +19,10 @@
               <div class="row">
                 <select class="form-control input-sm" [ngModel]="sortBy" (change)="sort(sortBy)">
                   <option ngValue="id">ID</option>
-                  <option ngValue="name">Name</option>
+                  <option ngValue="user_id">User Id</option>
                   <option ngValue="address">Address</option>
-                  <option ngValue="phone">Phone</option>
-                  <option ngValue="createdAt">Create Date</option>
+                  <option ngValue="status">Status</option>
+                  <option ngValue="created_at">Create Date</option>
                   <option ngValue="total">Total</option>
                 </select>
               </div>
@@ -30,7 +30,7 @@
             <div class="offset-sm-1 col-sm-5">
               <div class="row">
                 <select class="form-control input-sm" [ngModel]="sortOrder" (change)="sort(sortBy)">
-                  <option ngValue="+">Ascending</option>
+                  <option ngValue="">Ascending</option>
                   <option ngValue="-">Descending</option>
                   <option ngValue="badValue">Bad value</option>
                 </select>
@@ -57,19 +57,19 @@
               <a (click)="sort('id')" >ID</a>
             </th>
             <th style="width: 15%">
-              <a (click)="sort('name')" >Name</a>
+              <a (click)="sort('user_id')" >User ID</a>
             </th>
             <th style="width: 20%">
               <a (click)="sort('address')">Address</a>
             </th>
-            <th style="width: 10%">
-              <a (click)="sort('phone')">Phone</a>
+            <th style="width: 20%">
+              <a (click)="sort('status')">Status</a>
             </th>
             <th style="width: 10%">
               <a>Total</a>
             </th>
             <th style="width: 20%">
-              <a (click)="sort('createdAt')">Create Date</a>
+              <a (click)="sort('created_at')">Create Date</a>
             </th>
           </tr>
           </thead>
@@ -79,13 +79,18 @@
                                                       currentPage: activePage,
                                                       totalItems: itemsTotal }">
             <td>
-              <button *ngIf="status === 1" title="Delete Order" (click)="remove(item)" class="btn btn-danger"><i class="ion-android-delete"></i></button>
               <button title="Detail Order" [routerLink]="['/pages/orders/detail',item.id]" class="btn btn-info"><i class="ion-information-circled"></i></button>
             </td>
             <td>{{item.id}}</td>
-            <td>{{item.name}}</td>
+            <td><a>{{item.user_id}}</a></td>
             <td>{{item.address}}</td>
-            <td>{{item.phone}}</td>
+            <td [ngSwitch]="item.status">
+              <span *ngSwitchCase="0" class="p-1 label label-danger">Canceled</span>
+              <span *ngSwitchCase="1" class="p-1 label label-warning">Pending</span>
+              <span *ngSwitchCase="2" class="p-1 label label-info">Approved</span>
+              <span *ngSwitchCase="3" class="p-1 label label-success">Finished</span>
+            </td>
+            <td>{{total_price(item)}} vnđ</td>
             <td>{{item.created_at.split('T')[0]}}</td>
           </tr>
           </tbody>

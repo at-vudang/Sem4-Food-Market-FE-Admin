@@ -28,13 +28,6 @@ export const routes: Routes = [
       { path: 'orders', loadChildren: './orders/orders.module#OrdersModule' },
       { path: 'products', loadChildren: './product/products.module#ProductsModule' },
       { path: 'promotion', loadChildren: './promotion/promotion.module#PromotionModule' },
-      { path: 'editors', loadChildren: './editors/editors.module#EditorsModule' },
-      { path: 'components', loadChildren: './components/components.module#ComponentsModule' },
-      { path: 'charts', loadChildren: './charts/charts.module#ChartsModule' },
-      { path: 'ui', loadChildren: './ui/ui.module#UiModule' },
-      { path: 'forms', loadChildren: './forms/forms.module#FormsModule' },
-      { path: 'tables', loadChildren: './tables/tables.module#TablesModule' },
-      { path: 'maps', loadChildren: './maps/maps.module#MapsModule' }
     ],
     // canActivate: [ActivateGuard]
   }

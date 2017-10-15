@@ -56,14 +56,14 @@ export class AdminListComponent implements OnInit {
     console.log(confirmDelete);
     if (confirmDelete) {
       let url;
-      url = `${environment.hostname}/user/${item.id}`;
+      url = `${environment.hostname}/api/admin/users/${item.id}`;
       this.tokenService.requestWithToken(url, 'DELETE').subscribe(data => {
         let index;
         index = this.data.indexOf(item);
         if (index > -1) {
           this.data.splice(index, 1);
         }
-        alert('Delete Fail!');
+        alert('Delete Success!');
       }, err => {
         alert('Delete Fail!');
       });
