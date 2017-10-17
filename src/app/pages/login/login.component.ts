@@ -51,8 +51,10 @@ export class LoginComponent {
       }, (err: any) => {
         if (err.status === 401) {
           swal('Thông báo', 'Email hoặc mật khẩu không tồn tại!', 'error');
+          alert('Email hoặc mật khẩu không tồn tại!');
         } else {
           swal('Thông báo', 'Đăng nhập thất bại!', 'error');
+          alert('Đăng nhập thất bại!');
         }
       });
     }

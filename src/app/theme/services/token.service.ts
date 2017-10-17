@@ -14,6 +14,7 @@ export class TokenService {
   dataRefresh: any;
   currentUser: any;
   notify: any;
+  isAdmin = false;
   public login = new Subject<any>();
 
   constructor(private http: Http, private shareService: ShareService) {
@@ -42,6 +43,8 @@ export class TokenService {
     }
     this.requestWithToken(`${environment.hostname}/api/users/me`, 'GET').subscribe((data: any) => {
       this.currentUser = data.data;
+      console.log(data);
+      this.isAdmin = data.is_admin;
     }, (err: any) => {
       if (err.status === 401) {
         /** Access token expired will refresh token*/

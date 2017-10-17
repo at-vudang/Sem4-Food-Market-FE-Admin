@@ -4,7 +4,7 @@ import swal from 'sweetalert2';
 import {TokenService} from '../services/token.service';
 
 @Injectable()
-export class ActivateGuard implements CanActivate {
+export class AdminGuard implements CanActivate {
 
   private can = false;
   constructor(private router: Router, private tokenService: TokenService) {
@@ -14,7 +14,15 @@ export class ActivateGuard implements CanActivate {
       this.router.navigate(['/login']);
       return false;
     }
-    // this.tokenService.isAuthenticated();
+    this.tokenService.getInfo();
+    setTimeout(() => {
+      console.log(this.tokenService.isAdmin);
+      if (!this.tokenService.isAdmin) {
+        this.router.navigate(['/login']);
+        return false;
+      }
+
+    }, 2000);
     return true;
   }
 }

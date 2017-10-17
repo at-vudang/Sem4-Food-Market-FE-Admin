@@ -18,6 +18,7 @@ import { NgaModule } from './theme/nga.module';
 import { PagesModule } from './pages/pages.module';
 import {ActivateGuard} from './theme/security/activate.guard';
 import {NoLoggedGuard} from './theme/security/no-logged.guard';
+import {AdminGuard} from "./theme/security/admin.guard";
 
 
 
@@ -53,7 +54,7 @@ export type StoreType = {
     routing,
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
-    APP_PROVIDERS, ActivateGuard, NoLoggedGuard
+    APP_PROVIDERS, ActivateGuard, NoLoggedGuard, AdminGuard
   ],
 })
 

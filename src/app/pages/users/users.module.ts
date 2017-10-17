@@ -12,7 +12,6 @@ import { AdminListComponent } from './components/Admin/adminList.component';
 import {PagerModule} from 'ng2-smart-table/components/pager/pager.module';
 import {TablesModule} from '../tables/tables.module';
 import {AdminDetailComponent} from './components/Admin/adminDetail.component';
-import {NG2DataTableModule} from 'angular2-datatable-pagination';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { DropzoneModule } from 'ngx-dropzone-wrapper';
 import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
