@@ -28,14 +28,14 @@
                   <option ngValue="name">Name</option>
                   <option ngValue="price">Price</option>
                   <option ngValue="quantity">Quantity</option>
-                  <option ngValue="createdAt">Created Date</option>
+                  <option ngValue="created_at">Created Date</option>
                 </select>
               </div>
             </div>
             <div class="offset-sm-1 col-sm-5">
               <div class="row">
                 <select class="form-control input-sm" [(ngModel)]="sortOrder" (change)="sort(sortBy)">
-                  <option ngValue="+">Ascending</option>
+                  <option ngValue="">Ascending</option>
                   <option ngValue="-">Descending</option>
                   <option ngValue="badValue">Bad value</option>
                 </select>
@@ -85,7 +85,7 @@
             <td>{{item.name}}</td>
             <td>{{item.price.toLocaleString('vi') }} vnđ</td>
             <td class="text-left">{{item.total}}</td>
-            <td>{{item.created_at.split('T')[0] | uppercase}}</td>
+            <td>{{item.created_at.split(' ')[0] | uppercase}}</td>
           </tr>
           </tbody>
           <tfoot>

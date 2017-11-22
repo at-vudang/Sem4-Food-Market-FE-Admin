@@ -5,50 +5,43 @@ import {environment} from '../../../../../environments/environment';
 import {Http} from '@angular/http';
 import {ActivatedRoute} from '@angular/router';
 import {TokenService} from '../../../../theme/services/token.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-order-list',
   templateUrl: './list.html',
   styleUrls: ['./list.scss'],
 })
-export class OrderListComponent implements OnInit {
+export class StatisticListComponent implements OnInit {
 
   public data: any;
   public filterQuery = '';
   public rowsOnPage = 10;
   public activePage = 1;
   public header: string;
-  public status: number;
+  public status: any;
   public sortBy = 'created_at';
   public sortOrder = '-';
   public itemsTotal = 0;
+  public endAt;
+  public startAt;
+  public today;
   p = 1;
 
   constructor(private service: DataTablesService, private http: Http,
               private route: ActivatedRoute,
-              private tokenService: TokenService) {
+              private tokenService: TokenService,
+              private datePipe: DatePipe) {
     // this.service.getData().then((data) => {
     //   this.data = data;
     // });
+    this.status = '';
+    this.today = new Date();
+    this.endAt = this.datePipe.transform(this.today, 'yyyy-MM-dd');
+    this.startAt = new Date();
+    this.startAt = this.datePipe.transform(this.startAt.setMonth(this.startAt.getMonth() - 1), 'yyyy-MM-dd');
+
     this.data = {};
-    this.header = route.snapshot.url[0].path;
-    switch (this.header) {
-      case 'approved':
-        this.status = 2;
-        break;
-      case 'pending':
-        this.status = 1;
-        break;
-      case 'canceled':
-        this.status = 0;
-        break;
-      case 'finished':
-        this.status = 3;
-        break;
-      default:
-        this.status = 3;
-        break;
-    }
   }
   total_price(data) {
     let total;
@@ -59,7 +52,11 @@ export class OrderListComponent implements OnInit {
     return total.toLocaleString('vi');
   }
   public loadData() {
-    this.tokenService.requestWithToken(environment.hostname + '/api/admin/orders?page=' + (this.activePage)  +
+    this.tokenService.requestWithToken(environment.hostname + '/api/admin/statisticOrders' +
+      '?startDate=' + (this.startAt) +
+      '&endDate=' + (this.endAt) +
+      '&page=' + (this.activePage)  +
+      '&status=' + (this.status) +
       '&size=' + this.rowsOnPage + '&sort=' + this.sortOrder + this.sortBy, 'GET').subscribe((data) => {
       setTimeout(() => {
         console.log(data);

@@ -15,6 +15,7 @@ import {AdminDetailComponent} from './components/Admin/adminDetail.component';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { DropzoneModule } from 'ngx-dropzone-wrapper';
 import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
+import {ProfileComponent} from './components/Profile/profile.component';
 const DROPZONE_CONFIG: DropzoneConfigInterface = {
   // Change this to your upload POST address:
   url: 'http://localhost:8089/upload/upload',
@@ -44,6 +45,7 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     CustomerListComponent,
     AdminListComponent,
     AdminDetailComponent,
+    ProfileComponent
     ],
   providers: [
     DataTablesService

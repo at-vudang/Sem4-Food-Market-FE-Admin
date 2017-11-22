@@ -2,6 +2,7 @@ import { Routes, RouterModule } from '@angular/router';
 import {OrderListComponent} from './components/List/list.component';
 import {OrderComponent} from './orders.component';
 import {OrderDetailComponent} from './components/Detail/orderDetail.component';
+import {PaymentComponent} from './components/Payment/payment.component';
 
 
 // noinspection TypeScriptValidateTypes
@@ -12,6 +13,7 @@ const routes: Routes = [
     children: [
       { path: 'list', component: OrderListComponent },
       { path: 'detail/:id', component: OrderDetailComponent },
+      { path: 'payment', component: PaymentComponent },
     ],
   },
 ];

@@ -44,10 +44,18 @@ export class LoginComponent {
       this.http.post(url, data).map(res => res.json()).subscribe((a: any) => {
         console.log(a);
         this.tokenService.setToken(a.data);
-        this.service.loginToken(a);
-        swal('Thông báo', 'Đăng nhập thành công!', 'success');
-        alert('Login success!');
-        this.router.navigate(['/pages']);
+        this.tokenService.getInfo();
+        setTimeout(() => {
+          if (!this.tokenService.isAdmin) {
+            alert('Login fail!');
+            this.tokenService.removeToken();
+            return false;
+          }
+          this.service.loginToken(a);
+          swal('Thông báo', 'Đăng nhập thành công!', 'success');
+          alert('Login success!');
+          this.router.navigate(['/pages/dashboard'])
+        }, 2000);
       }, (err: any) => {
         if (err.status === 401) {
           swal('Thông báo', 'Email hoặc mật khẩu không tồn tại!', 'error');

@@ -38,14 +38,29 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-6">
-          <div class="pull-right">
-            <div class="button-wrapper">
-              <button [routerLink]="['new']" type="button" class="btn btn-primary  btn-md">Create</button>
-            </div>
+
+      </div>
+      <div class="row mt-2">
+        <div class="col-sm-4">
+          <label class="label-control">From date</label>
+          <input [(ngModel)]= "startAt" (ngModelChange)="changeModel($event)" type="date" class="form-control"  id="startAt" placeholder="Quantity">
+         </div>
+        <div class="col-sm-4">
+          <label class="label-control">To date</label>
+          <input [(ngModel)]= "endAt" (ngModelChange)="changeModel($event)" max="{{today | date: 'yyyy-MM-dd' }}" type="date" class="form-control"  id="endAt" placeholder="Quantity">
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Status: </label>
+            <select class="form-control" [(ngModel)]="status" (ngModelChange)="changeModel($event)">
+              <option value="">All</option>
+              <option value="0">Cancel</option>
+              <option value="1">Pending</option>
+              <option value="2">Approved</option>
+              <option value="3">Finished</option>
+            </select>
           </div>
         </div>
-
       </div>
       <div class="panel panel-default">
         <div class="panel-heading">List Order</div>

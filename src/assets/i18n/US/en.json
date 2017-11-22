@@ -1,7 +1,7 @@
 {
   "login": {
-    "title": "Sign in to ng2-admin",
-    "signup_link": "New to ng2-admin? Sign up!",
+    "title": "Sign in to LeoFood",
+    "signup_link": "New to LeoFood? Sign up!",
     "email": "Email",
     "password": "Password",
     "sign_in": "Sign in",
@@ -28,7 +28,10 @@
       "input_product": "Input Product",
       "list_product": "List Product",
       "manage_order": "Manage Order",
+      "manage_statistic": "Statistic",
+      "list_statistic": "List Statistic Order",
       "list_order": "List Order",
+      "payment": "List Payment",
       "manage_promotion": "Manage Promotion",
       "manage_category": "Manage Category",
       "manage_unit": "Manage Unit",

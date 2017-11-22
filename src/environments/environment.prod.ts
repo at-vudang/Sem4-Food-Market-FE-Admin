@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  hostname: 'http://foodmarket.ddns.net:9001',
+  hostname: 'http://food-market.ddns.net:9001',
 };

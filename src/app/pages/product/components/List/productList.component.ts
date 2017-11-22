@@ -16,7 +16,7 @@ export class ProductListComponent implements OnInit {
   public rowsOnPage = 10;
   public activePage = 1;
   public sortBy = 'created_at';
-  public sortOrder = '+';
+  public sortOrder = '';
   public itemsTotal = 0;
   public category = null;
   p = 1;
@@ -52,7 +52,7 @@ export class ProductListComponent implements OnInit {
     this.loadData();
   }
   sort(key) {
-    this.sortOrder = this.sortOrder === '+' ? '-' : '+';
+    this.sortOrder = this.sortOrder === '' ? '-' : '';
     this.sortBy = key;
     this.loadData();
   }

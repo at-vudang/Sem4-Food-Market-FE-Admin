@@ -16,12 +16,11 @@ export class AdminGuard implements CanActivate {
     }
     this.tokenService.getInfo();
     setTimeout(() => {
-      console.log(this.tokenService.isAdmin);
+      console.log('Admin Guard' + this.tokenService.isAdmin);
       if (!this.tokenService.isAdmin) {
         this.router.navigate(['/login']);
         return false;
       }
-
     }, 2000);
     return true;
   }

@@ -18,7 +18,7 @@
             <div class="offset-sm-1 col-sm-5">
               <div class="row">
                 <select class="form-control input-sm" [(ngModel)]="sortBy">
-                  <option ngValue="fullName">Name</option>
+                  <option ngValue="full_name">Name</option>
                   <option ngValue="email">Email</option>
                   <option ngValue="birthday">Birthday</option>
                   <option ngValue="gender">Gender</option>
@@ -28,7 +28,7 @@
             <div class="offset-sm-1 col-sm-5">
               <div class="row">
                 <select class="form-control input-sm" [(ngModel)]="sortOrder">
-                  <option ngValue="+">Ascending</option>
+                  <option ngValue="">Ascending</option>
                   <option ngValue="-">Descending</option>
                   <option ngValue="badValue">Bad value</option>
                 </select>
@@ -53,7 +53,7 @@
           <tr>
             <th style="width: 20%"></th>
             <th style="width: 20%">
-              <a (click)="sort('fullName')" >Full name</a>
+              <a (click)="sort('full_name')" >Full name</a>
             </th>
             <th style="width: 30%">
               <a (click)="sort('email')">Email</a>

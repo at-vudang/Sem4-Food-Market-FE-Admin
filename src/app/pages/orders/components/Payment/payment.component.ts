@@ -8,18 +8,18 @@ import {TokenService} from '../../../../theme/services/token.service';
 
 @Component({
   selector: 'app-order-list',
-  templateUrl: './list.html',
-  styleUrls: ['./list.scss'],
+  templateUrl: './payment.component.html',
+  styleUrls: ['../List/list.scss'],
 })
-export class OrderListComponent implements OnInit {
+export class PaymentComponent implements OnInit {
 
-  public data: any;
+  public data: any[];
   public filterQuery = '';
   public rowsOnPage = 10;
   public activePage = 1;
   public header: string;
   public status: number;
-  public sortBy = 'created_at';
+  public sortBy = 'payment_at';
   public sortOrder = '-';
   public itemsTotal = 0;
   p = 1;
@@ -27,44 +27,15 @@ export class OrderListComponent implements OnInit {
   constructor(private service: DataTablesService, private http: Http,
               private route: ActivatedRoute,
               private tokenService: TokenService) {
-    // this.service.getData().then((data) => {
-    //   this.data = data;
-    // });
-    this.data = {};
-    this.header = route.snapshot.url[0].path;
-    switch (this.header) {
-      case 'approved':
-        this.status = 2;
-        break;
-      case 'pending':
-        this.status = 1;
-        break;
-      case 'canceled':
-        this.status = 0;
-        break;
-      case 'finished':
-        this.status = 3;
-        break;
-      default:
-        this.status = 3;
-        break;
-    }
-  }
-  total_price(data) {
-    let total;
-    total = 0;
-    data.items.forEach(item => {
-      total += item.price_real;
-    });
-    return total.toLocaleString('vi');
   }
   public loadData() {
-    this.tokenService.requestWithToken(environment.hostname + '/api/admin/orders?page=' + (this.activePage)  +
-      '&size=' + this.rowsOnPage + '&sort=' + this.sortOrder + this.sortBy, 'GET').subscribe((data) => {
+    this.tokenService.requestWithToken(environment.hostname + '/api/admin/payments?page='
+      + (this.activePage)  + '&size=' + this.rowsOnPage + '&sort='
+      + this.sortOrder + this.sortBy, 'GET').subscribe((data) => {
       setTimeout(() => {
         console.log(data);
-        this.data = data;
-        this.itemsTotal = this.data.total;
+        this.data = data.data;
+        this.itemsTotal = data.total;
       }, 1000);
     });
   }
@@ -79,6 +50,14 @@ export class OrderListComponent implements OnInit {
 
   public sortByWordLength = (a: any) => {
     return a.city.length;
+  }
+
+  public remove(item) {
+    let index;
+    index = this.data.indexOf(item);
+    if (index > -1) {
+      this.data.splice(index, 1);
+    }
   }
   pageChanged(event) {
     this.activePage = event;

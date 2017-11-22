@@ -1,0 +1,15 @@
+@import '../../../../theme/sass/conf/conf';
+:host /deep/ .widgets {
+  .data-table-container {
+    width: 100%;
+    .panel-heading {
+      margin-top: 25px;
+    }
+  }
+}
+a:hover {
+  cursor: pointer;
+}
+.label {
+  border-radius: 5%;
+}

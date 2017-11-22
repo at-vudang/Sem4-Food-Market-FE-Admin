@@ -9,10 +9,10 @@ import {Http} from '@angular/http';
 
 @Component({
   selector: 'app-admin-detail',
-  templateUrl: './adminDetail.html',
-  styleUrls: ['./adminList.scss'],
+  templateUrl: './profile.html',
+  styleUrls: ['./profile.scss'],
 })
-export class AdminDetailComponent implements OnInit {
+export class ProfileComponent implements OnInit {
   metricsTableData: Array<any>;
   public defaultPicture = 'assets/img/theme/no-photo.png';
   public profile: any = {
@@ -107,35 +107,28 @@ export class AdminDetailComponent implements OnInit {
     return q;
   }
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.id = +params['id'];
-      if (this.id) {
-        let url;
-        url = environment.hostname + '/api/admin/users/' + this.id;
-        this.tokenService.requestWithToken(url, 'GET').subscribe(res => {
-          let data;
-          data = res.data;
-          setTimeout( () =>  {
-            this.userForm = this.formBuilder.group({
-              email: new FormControl(data.email, [Validators.required, Validators.email]),
-              name: new FormControl(data.full_name, [Validators.required]),
-              birthday: new FormControl((data.birthday != null) ? data.birthday.split(' ')[0] : '',
-                [Validators.required]),
-              phone: new FormControl(data.phone, [Validators.required]),
-            });
-          }, 2000);
-          // this.orders = data.orders;
-          data.roles.forEach(item => {
-            this.checkboxModel.find(check => check.id === item.id).checked = true;
+    setTimeout(() => {
+      let url;
+      url = environment.hostname + '/api/admin/users/' + this.tokenService.currentUser.id;
+      this.tokenService.requestWithToken(url, 'GET').subscribe(res => {
+        let data;
+        data = res.data;
+        setTimeout( () =>  {
+          this.userForm = this.formBuilder.group({
+            email: new FormControl(data.email, [Validators.required, Validators.email]),
+            name: new FormControl(data.full_name, [Validators.required]),
+            birthday: new FormControl((data.birthday != null) ? data.birthday.split(' ')[0] : '',
+              [Validators.required]),
+            phone: new FormControl(data.phone, [Validators.required]),
           });
+        }, 200);
+        // this.orders = data.orders;
+        data.roles.forEach(item => {
+          this.checkboxModel.find(check => check.id === item.id).checked = true;
         });
-        this.loadDataOrder();
-      //   url = environment.hostname + '/O'
-      // this.tokenService.getDataWithToken()
-      } else {
-        this.id = 0;
-      }
-    });
+      });
+      this.loadDataOrder();
+    }, 1000);
   }
   changePass(model) {
     let modelUser;
@@ -159,24 +152,6 @@ export class AdminDetailComponent implements OnInit {
     });
   }
   save(model) {
-    if (!this.id) {
-      let url, data;
-      url = environment.hostname + '/api/admin/users';
-      data = {
-        'email': model.email,
-        'full_name': model.name,
-        'password': '123456',
-        'password_confirmation': '123456',
-        'phone': model.phone,
-        'birthday': model.birthday,
-        'is_admin': this.checkboxModel.find(check => check.id === 2).checked ? 1 : 0
-      };
-      this.tokenService.requestWithToken(url, 'POST', data).subscribe(res => {
-        alert('Create successful');
-      }, err => {
-        alert('Create fail');
-      });
-    } else {
       let url, data;
       data = {
         'email': model.email,
@@ -186,17 +161,16 @@ export class AdminDetailComponent implements OnInit {
         'is_admin': this.checkboxModel.find(check => check.id === 2).checked ? 1 : 0
       };
       console.log(data);
-      url = environment.hostname + '/api/admin/users/' + this.id;
+      url = environment.hostname + '/api/admin/users/' + this.tokenService.currentUser.id;
       this.tokenService.requestWithToken(url, 'PUT', data).subscribe(res => {
         alert('Update successful');
       }, err => {
         alert('Update fail');
       });
     }
-  }
   public loadDataOrder() {
     let url;
-    url = environment.hostname + '/api/admin/getOrderFollowUser/' + this.id + '?page='
+    url = environment.hostname + '/api/admin/getOrderFollowUser/' + this.tokenService.currentUser.id + '?page='
       + (this.activePage)  + '&size=' + this.rowsOnPage + '&sort=' + this.sortOrder + this.sortBy;
     this.tokenService.requestWithToken(url, 'GET').subscribe(res => {
       this.orders = res;

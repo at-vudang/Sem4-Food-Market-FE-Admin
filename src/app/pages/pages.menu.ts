@@ -85,7 +85,37 @@ export const PAGES_MENU = [
                 title: 'general.menu.list_order',
               }
             }
+          },
+          {
+            path: 'payment',
+            data: {
+              menu: {
+                title: 'general.menu.payment',
+              }
+            }
           }
+        ]
+      },
+      {
+        path: 'statistics',
+        data: {
+          menu: {
+            title: 'general.menu.manage_statistic',
+            icon: 'ion-pricetag',
+            selected: false,
+            expanded: false,
+            order: 100,
+          }
+        },
+        children: [
+          {
+            path: 'list',
+            data: {
+              menu: {
+                title: 'general.menu.list_statistic',
+              }
+            }
+          },
         ]
       }
     ]

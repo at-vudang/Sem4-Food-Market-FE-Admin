@@ -3,7 +3,7 @@ import { Pages } from './pages.component';
 import { ModuleWithProviders } from '@angular/core';
 import { ActivateGuard } from '../theme/security/activate.guard';
 import {NoLoggedGuard} from '../theme/security/no-logged.guard';
-import {AdminGuard} from "../theme/security/admin.guard";
+import {AdminGuard} from '../theme/security/admin.guard';
 // noinspection TypeScriptValidateTypes
 
 // export function loadChildren(path) { return System.import(path); };
@@ -27,6 +27,7 @@ export const routes: Routes = [
       },
       { path: 'users', loadChildren: './users/users.module#UsersModule' },
       { path: 'orders', loadChildren: './orders/orders.module#OrdersModule' },
+      { path: 'statistics', loadChildren: './statistics/statistics.module#StatisticsModule' },
       { path: 'products', loadChildren: './product/products.module#ProductsModule' },
       { path: 'promotion', loadChildren: './promotion/promotion.module#PromotionModule' },
     ],

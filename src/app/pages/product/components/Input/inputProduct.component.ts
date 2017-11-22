@@ -71,12 +71,11 @@ export class InputProductComponent implements OnInit {
       console.log(data);
       this.categories = data;
     });
-    this.categoryChoise = 0;
     this.imageItems = [];
+    this.categoryChoise = 0;
   }
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.imageItems = [];
       this.id = +params['id'];
       if (this.id) {
         this.itemService.getItemById(this.id).subscribe(data => {
@@ -91,12 +90,13 @@ export class InputProductComponent implements OnInit {
               quantity: new FormControl(data.total, [Validators.required,
                 Validators.minLength(0)]),
               description: new FormControl(data.descript, [Validators.required]),
-              expiredAt: new FormControl(data.expired_day, [Validators.required]),
+              expiredAt: new FormControl(data.expired_day.split(' ')[0], [Validators.required]),
             });
             let i;
-            i = 0;
+            i = 0
+            this.imageItems.push({'image' : data.image});
             this.configDropZone.init = function () {
-                if (i++ > 1) {
+                if (i++ >= 1) {
                   return false;
                 }
                 let thisDropzone;

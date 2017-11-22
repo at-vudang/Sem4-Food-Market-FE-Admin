@@ -17,7 +17,7 @@ export class AdminListComponent implements OnInit {
   public rowsOnPage = 10;
   public activePage = 1;
   public sortBy = 'email';
-  public sortOrder = '+';
+  public sortOrder = '-';
   public itemsTotal = 0;
   p = 1;
 
@@ -38,7 +38,7 @@ export class AdminListComponent implements OnInit {
       });
   }
   sort(key) {
-    this.sortOrder = this.sortOrder === '+' ? '-' : '+';
+    this.sortOrder = this.sortOrder === '' ? '-' : '';
     this.sortBy = key;
     this.loadData();
   }
@@ -83,6 +83,10 @@ export class AdminListComponent implements OnInit {
     this.loadData();
   }
   ngOnInit(): void {
+    this.loadData();
+  }
+  changeModel(event) {
+    console.log(event);
     this.loadData();
   }
 }

@@ -19,11 +19,11 @@
               <div class="row">
                 <select class="form-control input-sm" [ngModel]="sortBy" (change)="sort(sortBy)">
                   <option ngValue="id">ID</option>
-                  <option ngValue="user_id">User Id</option>
-                  <option ngValue="address">Address</option>
-                  <option ngValue="status">Status</option>
-                  <option ngValue="created_at">Create Date</option>
-                  <option ngValue="total">Total</option>
+                  <option ngValue="order_id">Order ID</option>
+                  <option ngValue="transaction_id">Transaction Id</option>
+                  <option ngValue="payment_at">Transaction Date</option>
+                  <option ngValue="payer_email">Payer Email</option>
+                  <option ngValue="payment_gross">Payment Amount</option>
                 </select>
               </div>
             </div>
@@ -52,46 +52,37 @@
         <table class="table table-striped">
           <thead>
           <tr>
-            <th style="width: 20%">Action</th>
             <th style="width: 5%">
               <a (click)="sort('id')" >ID</a>
             </th>
-            <th style="width: 15%">
-              <a (click)="sort('user_id')" >User ID</a>
+            <th style="width: 5%">
+              <a (click)="sort('order_id')" >Order ID</a>
             </th>
             <th style="width: 20%">
-              <a (click)="sort('address')">Address</a>
+              <a (click)="sort('transaction_id')">Transaction ID</a>
             </th>
             <th style="width: 20%">
-              <a (click)="sort('status')">Status</a>
+              <a (click)="sort('payment_at')">Transaction Date</a>
             </th>
             <th style="width: 10%">
-              <a>Total</a>
+              <a (click)="sort('payer_email')">Payer Email</a>
             </th>
             <th style="width: 20%">
-              <a (click)="sort('created_at')">Create Date</a>
+              <a (click)="sort('payment_gross')">Payment Amount</a>
             </th>
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let item of data.data | paginate:{
+          <tr *ngFor="let item of data | paginate:{
                                                       itemsPerPage: rowsOnPage,
                                                       currentPage: activePage,
                                                       totalItems: itemsTotal }">
-            <td>
-              <button title="Detail Order" [routerLink]="['/pages/orders/detail',item.id]" class="btn btn-info"><i class="ion-information-circled"></i></button>
-            </td>
             <td>{{item.id}}</td>
-            <td><a>{{item.user_id}}</a></td>
-            <td>{{item.address}}</td>
-            <td [ngSwitch]="item.status">
-              <span *ngSwitchCase="0" class="p-1 label label-danger">Canceled</span>
-              <span *ngSwitchCase="1" class="p-1 label label-warning">Pending</span>
-              <span *ngSwitchCase="2" class="p-1 label label-info">Approved</span>
-              <span *ngSwitchCase="3" class="p-1 label label-success">Finished</span>
-            </td>
-            <td>{{total_price(item)}} vnđ</td>
-            <td>{{item.created_at.split('T')[0]}}</td>
+            <td><a [routerLink]="['/pages/orders/detail', item.order_id]">{{item.order_id}}</a></td>
+            <td>{{item.transaction_id}}</td>
+            <td>{{item.payment_at}}</td>
+            <td>{{item.payer_email}}</td>
+            <td>{{item.payment_gross}}</td>
           </tr>
           </tbody>
           <tfoot>
@@ -107,3 +98,4 @@
     </ba-card>
   </div>
 </div>
+
