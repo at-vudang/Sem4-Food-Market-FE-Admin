@@ -158,6 +158,27 @@ export class AdminDetailComponent implements OnInit {
       alert('Update fail');
     });
   }
+  resetPassword(model) {
+    let modelUser;
+    modelUser = this.userForm.value;
+    let url, data;
+    data = {
+      'email': modelUser.email,
+      'full_name': modelUser.name,
+      'phone': modelUser.phone,
+      'birthday': modelUser.birthday,
+      'is_admin': this.checkboxModel.find(check => check.id === 2).checked ? 1 : 0,
+      'password': '123456',
+      'password_confirmation': '123456'
+    };
+    console.log(data);
+    url = environment.hostname + '/api/admin/users/' + this.id;
+    this.tokenService.requestWithToken(url, 'PUT', data).subscribe(res => {
+      alert('Update successful');
+    }, err => {
+      alert('Update fail');
+    });
+  }
   save(model) {
     if (!this.id) {
       let url, data;

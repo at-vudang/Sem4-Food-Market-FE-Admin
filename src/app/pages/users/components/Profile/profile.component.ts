@@ -144,7 +144,7 @@ export class ProfileComponent implements OnInit {
       'password_confirmation': model.password_confirmation
     };
     console.log(data);
-    url = environment.hostname + '/api/admin/users/' + this.id;
+    url = environment.hostname + '/api/admin/users/' + this.tokenService.currentUser.id;
     this.tokenService.requestWithToken(url, 'PUT', data).subscribe(res => {
       alert('Update successful');
     }, err => {
